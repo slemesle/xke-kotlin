@@ -1,11 +1,7 @@
 package fr.xebia.xke.kotlin
 
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 14/04/13
- * Time: 22:36
- * To change this template use File | Settings | File Templates.
+ * TODO - Exercice 4 : Implementer le processor
  */
 
 import java.io.File
@@ -25,39 +21,8 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
 
 
     {
-        var lineCount = 0
-        var countDown = -1
-        var readProducts = true
-
-        fun processLines(it: String){
-            // Reading first line
-            if (lineCount == 0) {
-                tryLogAndThrow({countDown = it.toInt()},
-                        "Bad file format on line $lineCount : was '$it' expecting [0-9]+ (product count)")
-            } else if (countDown > 0){ // reading product or sale
-                tryLogAndThrow({if (readProducts)  putProduct(it) else putSale(it)}, "Bad file format on line $lineCount")
-                countDown--
-            } else if (readProducts){ // finished reading products re-initiate countDown
-                tryLogAndThrow({countDown = it.toInt()},
-                        "Bad file format on line $lineCount : was '$it' expecting [0-9]+ (sales count)")
-                readProducts = false    // Now reading sales
-            } else if (it.notEmpty()) {
-                log?.error("Bad line count $lineCount is more than expected")
-                throw FnagException("Bad line count $lineCount is more than expected")
-            }
-            lineCount++
-        }
-
-        if (stream != null){
-            stream.reader().forEachLine { processLines(it) }
-        } else {
-            lines forEach { processLines(it) }
-        }
-
-        if (countDown > 0) {
-            log?.error("bad line count waiting for $countDown missing lines while we've read $lineCount lines")
-            throw FnagException("Bad line count missing $countDown lines")
-        }
+            // TODO Exercice avec stream.reader().forEachLine et lines.forEach,
+            // Parsez les ligne et pour determiner les Top Products et Top Sellers
 
     }
 
@@ -77,16 +42,12 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
      */
     private fun putSale(line : String){
         val s = Sale(line)
-        val seller  = sellers.getOrPut("${s.seller}-${s.boutique}"){ Seller(s.boutique, s.seller) }
-        val product = products get s.ref
-
-        if (product != null){
-            seller addAmount product.prix * s.quantity
-            product addQuantity s.quantity
-        }
+        // TODO : Ajoutez ou mettez a jour le seller et le produit pour cette vente
     }
 
-    public fun getTopProducts(): List<Product> = products.values() sortDescendingBy { it.sellCount } retainMaxOf { it.sellCount }
+    // TODO  a l'aide des fonctions définies dans CollectionExtension.kt recuperez la liste des Top Product
+    public fun getTopProducts(): List<Product> = arrayListOf()
+
 
     public fun printTopProduct() {
         // Trie les produit par ordre décroissant de sellCount et retient les max sur sellCount
@@ -94,7 +55,8 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
        topSales forEach { log?.info("TOPSALE|${it.ref}|${it.desc}|${it.sellCount}")}
     }
 
-    public fun getTopSeller() : List<Seller> = sellers.values() sortDescendingBy { it.amount } retainMaxOf { it.amount }
+    // TODO  a l'aide des fonctions définies dans CollectionExtension.kt recuperez la liste des Top Product
+    public fun getTopSeller() : List<Seller> = arrayListOf()
 
     public fun printTopSeller() {
         // Trie les seller par ordre décroissant et retient les max de amount

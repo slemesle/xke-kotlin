@@ -1,11 +1,8 @@
 package fr.xebia.xke.kotlin
 
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 14/04/13
- * Time: 00:50
- * To change this template use File | Settings | File Templates.
+ * TODO : Exercice 2 Implementer le constructeur de la classe Produit
+ * Puis la methode addQuantity et surcharger l'operateur ==
  */
 
 import org.junit.Test
@@ -21,7 +18,7 @@ class ProductTest {
         assert(product.desc == "Lance-missile USB")
     }
 
-    Test(expected = javaClass<RuntimeException>())
+    Test(expected = javaClass<FnagException>())
     fun should_validate_format(){
         Product("LMUSB|20Lance-missile USB")
     }
@@ -35,6 +32,13 @@ class ProductTest {
         assert(product.sellCount == 1)
     }
 
+
+    Test
+    fun should_return_a_valid_string_representation(){
+        val product = Product("LMUSB|20|Lance-missile USB")
+
+        assert("Product {ref:LMUSB, prix:20, desc:Lance-missile USB, sellCount:0}" == "$product")
+    }
 
     Test
     fun two_same_products_should_be_equal(){

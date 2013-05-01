@@ -1,44 +1,36 @@
 package fr.xebia.xke.kotlin
 
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 14/04/13
- * Time: 00:10
+ * TODO : Exercice 2 le format a parser est :
  * LMUSB|20|Lance-missile USB
+ *
+ * Commencez par parser la chaine puis implementez les methodes necessaires
  */
 
 import java.util.StringTokenizer
 
 public class Product (productLine : String) {
 
-    val ref: String
-    val prix : Float
-    val desc : String
-    var sellCount = 0
+    val ref: String = ""
+    val prix : Float = 0.0
+    val desc : String = ""
+    var sellCount = 0 // TODO : sellCount ne doit pas etre modifiable en dehors de la classe Ajoutez un setter privé
         private set (count){
             $sellCount = count
         }
 
     {
-        if (!productLine.matches(".+\\|[0-9]+\\.?[0-9]{0,2}\\|.+"))
-            throw FnagException("Invalid line format: '$productLine' expecting 'réf. produit|prix|description' ")
-
-        val tok = StringTokenizer(productLine, "|")
-        ref = tok.nextToken()
-        prix =tok.nextToken().toFloat()
-        desc = tok.nextToken()
+        // TODO Exercice 2 - 1 : Parser la ligne format: ref|prix|desc
     }
 
     fun addQuantity(count : Int){
-        $sellCount += count
+        // TODO modifiez le backingField en ajoutant count a sellCount (IE $sellCount)
     }
 
-    fun toString ()  = "Product {ref:$ref, prix:$prix, desc:$desc, sellCount:$sellCount}"
+     // TODO definir une methode expression toString
+    fun toString ()  = "Product"
 
-    fun equals (product : Any?) =
-       if (product is Product)
-        ref == product.ref && prix == product.prix && desc == product.desc && sellCount == product.sellCount
-       else false
+    // TODO implementer l'operateur ==
+    fun equals (product : Any?) = false
 
 }

@@ -1,11 +1,7 @@
 package fr.xebia.xke.kotlin
 
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 14/04/13
- * Time: 01:15
- * To change this template use File | Settings | File Templates.
+ * TODO - Exercice 1 Faire passer les tests SaleTest en implementant la classe Sale
  */
 
 
