@@ -61,3 +61,8 @@ Bonus :
 
 Créer une fonction d'extension sur la classe String pour determiner si c'est un palindrome :).
 
+## Liens utiles
+
++ [Kotlin Web Demo](http://kotlin-demo.jetbrains.com/)
++ [Kotlin Docs Home](http://confluence.jetbrains.com/display/Kotlin/Welcome)
++ [Kotlin Doc API](http://jetbrains.github.io/kotlin/versions/snapshot/apidocs/index.html)
