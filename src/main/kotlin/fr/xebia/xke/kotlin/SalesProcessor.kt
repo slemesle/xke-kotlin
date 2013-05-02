@@ -25,27 +25,38 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
 
 
     {
-        var lineCount = 0
-        var countDown = -1
-        var readProducts = true
+        var ctx : ParsingContext = ParsingContext()
 
         fun processLines(it: String){
-            // Reading first line
-            if (lineCount == 0) {
-                tryLogAndThrow({countDown = it.toInt()},
-                        "Bad file format on line $lineCount : was '$it' expecting [0-9]+ (product count)")
-            } else if (countDown > 0){ // reading product or sale
-                tryLogAndThrow({if (readProducts)  putProduct(it) else putSale(it)}, "Bad file format on line $lineCount")
-                countDown--
-            } else if (readProducts){ // finished reading products re-initiate countDown
-                tryLogAndThrow({countDown = it.toInt()},
-                        "Bad file format on line $lineCount : was '$it' expecting [0-9]+ (sales count)")
-                readProducts = false    // Now reading sales
-            } else if (it.notEmpty()) {
-                log?.error("Bad line count $lineCount is more than expected")
-                throw FnagException("Bad line count $lineCount is more than expected")
+
+            when (ctx.state){
+
+                ParserState.PRODUCT_COUNT -> {
+                        tryLogAndThrow({ctx.productLine = it.toInt()}, "Bad file format on line ${ctx.lineCount} : was '$it' expecting [0-9]+ (product count)")
+                        ctx.next()
+                }
+
+                ParserState.PRODUCT_LINE -> {
+                    tryLogAndThrow({ putProduct(it) }, "Bad file format on line ${ctx.lineCount} expecting Product line")
+                    ctx.dec()
+                }
+
+                ParserState.SALES_COUNT -> {
+                    tryLogAndThrow({ctx.salesLine = it.toInt()},"Bad file format on line ${ctx.lineCount} : was '$it' expecting [0-9]+ (sales count)")
+                    ctx.next()
+                }
+
+                ParserState.SALE_LINE -> {
+                    tryLogAndThrow({ putSale(it) }, "Bad file format on line ${ctx.lineCount} expecting Sale line")
+                    ctx.dec()
+                }
+
+                else -> {
+                    log?.error("Bad line count ${ctx.lineCount} is more than expected")
+                    throw FnagException("Bad line count ${ctx.lineCount} is more than expected")
+                }
             }
-            lineCount++
+            ctx.lineCount++
         }
 
         if (stream != null){
@@ -54,9 +65,9 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
             lines forEach { processLines(it) }
         }
 
-        if (countDown > 0) {
-            log?.error("bad line count waiting for $countDown missing lines while we've read $lineCount lines")
-            throw FnagException("Bad line count missing $countDown lines")
+        if (ctx.countDown > 0) {
+            log?.error("bad line count waiting for ${ctx.countDown} missing lines while reading ${ctx.state} we've read ${ctx.lineCount} lines")
+            throw FnagException("Bad line count missing  ${ctx.countDown} lines")
         }
 
     }
@@ -113,6 +124,36 @@ public class SalesProcessor(stream : InputStream? = null , lines : List<String> 
             log?.error("$message", e)
             throw e
         }
+    }
+
+
+    class ParsingContext(){
+        var countDown : Int = 0
+            private set
+        var lineCount : Int = 0
+        var productLine : Int = 0
+            set (p : Int ){
+                $productLine = p
+                $countDown = p
+            }
+        var salesLine : Int = 0
+            set (p : Int ){
+                $salesLine = p
+                $countDown = p
+            }
+        var state : ParserState = ParserState.PRODUCT_COUNT
+
+        fun next() {
+            state = state.next()
+        }
+
+        fun dec (){
+            $countDown--
+            if ($countDown == 0){
+                next()
+            }
+        }
+
     }
 
 }

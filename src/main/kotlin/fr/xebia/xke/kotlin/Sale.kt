@@ -1,10 +1,7 @@
 package fr.xebia.xke.kotlin
 
 /**
- * Created with IntelliJ IDEA.
- * User: slm
- * Date: 14/04/13
- * Time: 01:08
+ *
  * boutique|vendeur|réf. produit|quantité vendue
  */
 

@@ -33,3 +33,20 @@ public inline fun <T, R: Comparable<R>> Iterable<T>.sortDescendingBy(f: (T) -> R
     java.util.Collections.sort(sortedList, sortBy)
     return sortedList
 }
+
+
+
+public fun String.isPalindrome(): Boolean {
+
+    val mid = this.length / 2
+    var length = this.length
+    if (length >= 2)
+        for (i in 0..mid){
+            if (this.charAt(i) != this.charAt(length -i -1)){
+                return false
+            }
+        }
+    return true
+}
+
+
